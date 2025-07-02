@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuzzy Membership Functions</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .chart-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+        }
+        .chart-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 10px;
+        }
+        canvas {
+            max-height: 400px;
+        }
+        .legend {
+            background: #f1f3f4;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .legend h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Fuzzy Logic Controller - Membership Functions</h1>
+        
+        <div class="chart-grid">
+            <div class="chart-container">
+                <div class="chart-title">🌡️ Temperature Input (°C)</div>
+                <canvas id="temperatureChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">💧 Humidity Input (%)</div>
+                <canvas id="humidityChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">🏭 Gas Concentration (Digital)</div>
+                <canvas id="gasChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">🔥 Flame Sensor (Digital)</div>
+                <canvas id="flameChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">🌀 Fan Speed Output (PWM: 0-255)</div>
+                <canvas id="fanSpeedChart"></canvas>
+            </div>
+        </div>
+
+        <div class="legend">
+            <h3>📋 Membership Function Details</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div>
+                    <h4>Temperature Sets:</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #3498db;"></div>
+                        <span>Low: 26-32°C (trapezoid)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #f39c12;"></div>
+                        <span>Medium: 31-36°C (trapezoid)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #e74c3c;"></div>
+                        <span>High: 35-50°C (trapezoid)</span>
+                    </div>
+                </div>
+                <div>
+                    <h4>Humidity Sets:</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #3498db;"></div>
+                        <span>Low: 0-60% (trapezoid)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #f39c12;"></div>
+                        <span>Medium: 55-75% (trapezoid)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #e74c3c;"></div>
+                        <span>High: 70-100% (trapezoid)</span>
+                    </div>
+                </div>
+                <div>
+                    <h4>Digital Sensors:</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #27ae60;"></div>
+                        <span>Gas Safe (input=0) → μ=1</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #e74c3c;"></div>
+                        <span>Gas Detected (input=1) → μ=1</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #e74c3c;"></div>
+                        <span>Fire Detected (input=0) → μ=1</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #27ae60;"></div>
+                        <span>No Fire (input=1) → μ=1</span>
+                    </div>
+                    <small><em>Note: Digital inputs activate specific fuzzy sets completely (μ=1)</em></small>
+                </div>
+                <div>
+                    <h4>Fan Speed Sets:</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #95a5a6;"></div>
+                        <span>Off: 0 (singleton)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #3498db;"></div>
+                        <span>Low: 80-130 (trapezoid)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #f39c12;"></div>
+                        <span>Medium: 130-190 (trapezoid)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #e74c3c;"></div>
+                        <span>High: 190-255 (trapezoid)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <h3>⚡ Fuzzy Rules (Aturan Fuzzy)</h3>
+            <div style="background: #ffffff; border-radius: 8px; padding: 20px; border-left: 4px solid #e74c3c;">
+                <h4 style="color: #c0392b; margin-top: 0;">🚨 Emergency Rules (Prioritas Tinggi)</h4>
+                <div style="margin-left: 20px;">
+                    <p><strong>Rule -1:</strong> IF (Fire Detected AND Gas Detected) → Fan Speed = HIGH</p>
+                    <p><strong>Rule 0:</strong> IF (Fire Detected) → Fan Speed = HIGH</p>
+                    <p><strong>Rule 1:</strong> IF (Gas Detected) → Fan Speed = HIGH</p>
+                    <small style="color: #7f8c8d;"><em>Aturan darurat: kipas maksimal saat bahaya terdeteksi</em></small>
+                </div>
+            </div>
+            
+            <div style="background: #ffffff; border-radius: 8px; padding: 20px; border-left: 4px solid #27ae60; margin-top: 15px;">
+                <h4 style="color: #27ae60; margin-top: 0;">🌿 Normal Operation Rules (Kondisi Aman)</h4>
+                <div style="margin-left: 20px;">
+                    <p><strong>Rule 2:</strong> IF (Temp Low AND (Humidity Low OR Medium) AND No Fire AND Gas Safe) → Fan Speed = OFF</p>
+                    <p><strong>Rule 3:</strong> IF (Temp Low AND Humidity High AND No Fire AND Gas Safe) → Fan Speed = LOW</p>
+                    <p><strong>Rule 4:</strong> IF (Temp Medium AND Humidity Low AND No Fire AND Gas Safe) → Fan Speed = LOW</p>
+                    <p><strong>Rule 5:</strong> IF (Temp Medium AND (Humidity Medium OR High) AND No Fire AND Gas Safe) → Fan Speed = MEDIUM</p>
+                    <p><strong>Rule 6:</strong> IF (Temp High AND No Fire AND Gas Safe) → Fan Speed = HIGH</p>
+                    <small style="color: #7f8c8d;"><em>Aturan normal: kipas disesuaikan dengan suhu dan kelembaban</em></small>
+                </div>
+            </div>
+
+            <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin-top: 15px;">
+                <h4 style="color: #2c3e50; margin-top: 0;">📊 Rule Priority & Logic</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                    <div>
+                        <h5>🔥 Safety First:</h5>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li>Fire/Gas detection → Fan HIGH</li>
+                            <li>Emergency rules override normal rules</li>
+                            <li>Immediate ventilation response</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5>🌡️ Comfort Control:</h5>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li>Low temp + low humidity → Fan OFF</li>
+                            <li>Medium temp → Fan LOW/MEDIUM</li>
+                            <li>High temp → Fan HIGH</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5>💧 Humidity Management:</h5>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li>High humidity → Increase fan speed</li>
+                            <li>Low humidity → Reduce fan speed</li>
+                            <li>Balanced ventilation control</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #fff3cd; border-radius: 8px; padding: 20px; margin-top: 15px; border: 1px solid #ffeaa7;">
+                <h4 style="color: #856404; margin-top: 0;">⚙️ System Behavior</h4>
+                <div style="color: #856404;">
+                    <p><strong>Hierarchical Control:</strong></p>
+                    <ol style="margin: 10px 0; padding-left: 25px;">
+                        <li><strong>Safety Override:</strong> Fire/Gas detection triggers maximum fan speed regardless of temperature/humidity</li>
+                        <li><strong>Comfort Control:</strong> When safe, fan speed adjusts based on environmental conditions</li>
+                        <li><strong>Energy Efficiency:</strong> Fan turns off only when conditions are comfortable and safe</li>
+                        <li><strong>Gradual Response:</strong> Multiple fan speeds provide smooth transition between conditions</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to create trapezoid membership function
+        function createTrapezoid(a, b, c, d, min, max, step = 0.1) {
+            const points = [];
+            for (let x = min; x <= max; x += step) {
+                let y = 0;
+                if (x >= a && x <= b) {
+                    y = (x - a) / (b - a);
+                } else if (x > b && x < c) {
+                    y = 1;
+                } else if (x >= c && x <= d) {
+                    y = (d - x) / (d - c);
+                }
+                points.push({x: x, y: y});
+            }
+            return points;
+        }
+
+        // Function to create singleton membership function
+        function createSingleton(value, min, max) {
+            const points = [];
+            for (let x = min; x <= max; x += 0.1) {
+                points.push({x: x, y: x === value ? 1 : 0});
+            }
+            return points;
+        }
+
+        // Chart configuration
+        const chartConfig = {
+            type: 'line',
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Input Value'
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    },
+                    y: {
+                        min: 0,
+                        max: 1.1,
+                        title: {
+                            display: true,
+                            text: 'Membership Degree'
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    }
+                },
+                elements: {
+                    line: {
+                        tension: 0
+                    },
+                    point: {
+                        radius: 0
+                    }
+                }
+            }
+        };
+
+        // Temperature Chart
+        new Chart(document.getElementById('temperatureChart'), {
+            ...chartConfig,
+            data: {
+                datasets: [
+                    {
+                        label: 'Low',
+                        data: createTrapezoid(26, 28, 30, 32, 20, 45),
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        fill: true,
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'Medium',
+                        data: createTrapezoid(31, 32, 34, 36, 20, 45),
+                        borderColor: '#f39c12',
+                        backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                        fill: true,
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'High',
+                        data: createTrapezoid(35, 36, 50, 50, 20, 45),
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        fill: true,
+                        borderWidth: 3
+                    }
+                ]
+            }
+        });
+
+        // Humidity Chart
+        new Chart(document.getElementById('humidityChart'), {
+            ...chartConfig,
+            data: {
+                datasets: [
+                    {
+                        label: 'Low',
+                        data: createTrapezoid(0, 0, 40, 60, 0, 100),
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        fill: true,
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'Medium',
+                        data: createTrapezoid(55, 60, 70, 75, 0, 100),
+                        borderColor: '#f39c12',
+                        backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                        fill: true,
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'High',
+                        data: createTrapezoid(70, 75, 100, 100, 0, 100),
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        fill: true,
+                        borderWidth: 3
+                    }
+                ]
+            }
+        });
+
+        // Gas Concentration Chart (Digital) - dari kode: gasDetected (1,1,1,1) dan gasSafe (0,0,0,0)
+        new Chart(document.getElementById('gasChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Gas Safe (0)', 'Gas Detected (1)'],
+                datasets: [{
+                    label: 'Membership Value',
+                    data: [1, 1], // Kedua state memiliki membership = 1 saat aktif
+                    backgroundColor: ['#27ae60', '#e74c3c'],
+                    borderColor: ['#1e8449', '#c0392b'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 1.1,
+                        title: {
+                            display: true,
+                            text: 'Membership Degree'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Digital States'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': μ = ' + context.parsed.y;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Flame Sensor Chart (Digital) - dari kode: fireDetected (0,0,0,0) dan noFire (1,1,1,1)
+        new Chart(document.getElementById('flameChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Fire Detected (0)', 'No Fire (1)'],
+                datasets: [{
+                    label: 'Membership Value',
+                    data: [1, 1], // Kedua state memiliki membership = 1 saat aktif
+                    backgroundColor: ['#e74c3c', '#27ae60'],
+                    borderColor: ['#c0392b', '#1e8449'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 1.1,
+                        title: {
+                            display: true,
+                            text: 'Membership Degree'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Digital States'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': μ = ' + context.parsed.y;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Fan Speed Chart
+        new Chart(document.getElementById('fanSpeedChart'), {
+            ...chartConfig,
+            data: {
+                datasets: [
+                    {
+                        label: 'Off',
+                        data: createSingleton(0, 0, 255),
+                        borderColor: '#95a5a6',
+                        backgroundColor: 'rgba(149, 165, 166, 0.1)',
+                        fill: true,
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'Low',
+                        data: createTrapezoid(80, 90, 110, 130, 0, 255),
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        fill: true,
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'Medium',
+                        data: createTrapezoid(130, 150, 170, 190, 0, 255),
+                        borderColor: '#f39c12',
+                        backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                        fill: true,
+                        borderWidth: 3
+                    },
+                    {
+                        label: 'High',
+                        data: createTrapezoid(190, 210, 255, 255, 0, 255),
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        fill: true,
+                        borderWidth: 3
+                    }
+                ]
+            }
+        });
+    </script>
+</body>
+</html>
