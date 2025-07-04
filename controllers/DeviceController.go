@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -97,34 +98,49 @@ func (ctrl *DeviceController) CreateDeviceReading(c *gin.Context) {
 	})
 }
 
-
 // ... (Sisa controller tidak perlu diubah) ...
 // handleNotifications, GetReadingsByDevice, dll. tetap sama
 
-
 func (ctrl *DeviceController) handleNotifications(reading models.DeviceReading) {
 	var emergencyMessage string
+	isDoorAlert := false
 
 	switch reading.DeviceID {
 	case "dapur":
 		if reading.FlameValue != nil && *reading.FlameValue == 0 {
-			emergencyMessage = fmt.Sprintf("🚨🔥 *PERINGATAN KEBAKARAN DI DAPUR\\!* 🔥🚨")
+			emergencyMessage = "🚨🔥 *PERINGATAN KEBAKARAN DI DAPUR!* 🔥🚨"
 		} else if reading.GasValue != nil && *reading.GasValue == 1 {
-			emergencyMessage = fmt.Sprintf("⚠️💨 *GAS BERBAHAYA TERDETEKSI DI DAPUR\\!* 💨⚠️")
+			emergencyMessage = "⚠️💨 *GAS BERBAHAYA TERDETEKSI DI DAPUR!* 💨⚠️"
 		} else if reading.DoorStatus == "OPEN" {
-			emergencyMessage = fmt.Sprintf("🚪❗️ *PINTU DAPUR TERBUKA\\!* ❗️🚪")
+			emergencyMessage = "🚪❗️ *PINTU DAPUR TERBUKA!* ❗️🚪"
+			isDoorAlert = true
+		} else if reading.MotionStatus != nil && *reading.MotionStatus == "MOTION_DETECTED" {
+			emergencyMessage = "👀❗️ *GERAKAN TERDETEKSI DI DAPUR!* ❗️👀"
 		}
 
 	case "ruang_tamu":
 		if reading.DoorStatus == "OPEN" {
-			emergencyMessage = fmt.Sprintf("🚪❗️ *PINTU RUANG TAMU TERBUKA\\!* ❗️🚪")
+			emergencyMessage = "🚪❗️ *PINTU RUANG TAMU TERBUKA!* ❗️🚪"
+			isDoorAlert = true
+		} else if reading.MotionStatus != nil && *reading.MotionStatus == "MOTION_DETECTED" {
+			emergencyMessage = "👀❗️ *GERAKAN TERDETEKSI DI RUANG TAMU!* ❗️👀"
 		}
-		
+
+	case "kamar":
+		if reading.DoorStatus == "OPEN" {
+			emergencyMessage = "🚪❗️ *PINTU KAMAR TERBUKA!* ❗️🚪"
+			isDoorAlert = true
+		}
+
 	default:
 		log.Printf("Menerima data dari perangkat tidak dikenal '%s', tidak ada notifikasi dikirim.", reading.DeviceID)
 	}
 
 	if emergencyMessage != "" {
+		if isDoorAlert {
+			log.Printf("Delay 5 detik sebelum kirim notifikasi pintu terbuka untuk %s...", reading.DeviceID)
+			time.Sleep(5 * time.Second)
+		}
 		log.Printf("Mengirim notifikasi darurat untuk %s: %s", reading.DeviceID, emergencyMessage)
 		sendTelegramNotification(emergencyMessage)
 	}
@@ -180,8 +196,8 @@ func (ctrl *DeviceController) SetFanOverride(c *gin.Context) {
 
 	log.Printf("Perintah override untuk '%s' diubah menjadi %v.", deviceID, input.Override)
 	c.JSON(http.StatusOK, gin.H{
-		"message":                  "Mode kipas berhasil diubah",
-		"device_id":                deviceID,
+		"message":                "Mode kipas berhasil diubah",
+		"device_id":              deviceID,
 		"is_fan_override_active": device.IsFanOverrideActive,
 	})
 }
@@ -193,7 +209,7 @@ func (ctrl *DeviceController) GetDeviceStatus(c *gin.Context) {
 	if err := ctrl.DB.Where("device_id = ?", deviceID).First(&device).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusOK, gin.H{
-				"device_id":                deviceID,
+				"device_id":              deviceID,
 				"is_fan_override_active": false,
 			})
 			return
@@ -203,7 +219,7 @@ func (ctrl *DeviceController) GetDeviceStatus(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"device_id":                deviceID,
+		"device_id":              deviceID,
 		"is_fan_override_active": device.IsFanOverrideActive,
 	})
 }
@@ -217,7 +233,7 @@ func sendTelegramNotification(message string) {
 	payload := map[string]string{
 		"chat_id":    telegramChatID,
 		"text":       message,
-		"parse_mode": "MarkdownV2",
+		"parse_mode": "HTML", // ← ganti ini dari MarkdownV2 jadi HTML
 	}
 	jsonPayload, _ := json.Marshal(payload)
 	resp, err := http.Post(apiURL, "application/json", bytes.NewBuffer(jsonPayload))
