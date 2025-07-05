@@ -70,6 +70,28 @@ python main.py
 ```
 
 3. ESP32
-   # Upload kode dari folder Esp32 ke ESP32 via Arduino IDE
+   - Upload kode dari folder Esp32 ke ESP32 via Arduino IDE
+   - Pastikan koneksi WiFi & endpoint API sudah sesuai
+  
+👨‍💻 Developer
+👤 Bagus Ardiansyah
+Mahasiswa Teknik Informatika | IoT & Software Enthusiast
 
-   # Pastikan koneksi WiFi & endpoint API sudah sesuai
+📫 GitHub
+
+
+💡 Rencana Pengembangan
+ CRUD perangkat
+
+ Kontrol LED & Fan
+
+ UI versi dark mode
+
+ Fuzzy logic untuk pengaturan suhu otomatis
+
+ Android app via Bluetooth
+
+ Notifikasi via Telegram
+
+ 📜 License
+MIT License © 2025 Bagus Ardiansyah
