@@ -73,7 +73,7 @@ python main.py
    - Upload kode dari folder Esp32 ke ESP32 via Arduino IDE
    - Pastikan koneksi WiFi & endpoint API sudah sesuai
   
-👨‍💻 Developer  
+👨‍💻 Developer   
 👤 Bagus Ardiansyah  
 Mahasiswa Teknik Informatika | IoT & Software Enthusiast  
 
