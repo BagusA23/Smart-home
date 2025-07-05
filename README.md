@@ -93,7 +93,7 @@ python main.py
 Bagus Ardiansyah  
 💻 Mahasiswa Teknik Informatika  
 📍 Fokus: IoT • Backend • Desktop Apps  
-📫 GitHub @BagusA23  
+📫 GitHub [@BagusA23](https://github.com/BagusA23)  
 
 📄 Lisensi  
 MIT License © 2025 Bagus Ardiansyah  
