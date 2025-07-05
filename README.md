@@ -84,8 +84,10 @@ Mahasiswa Teknik Informatika | IoT & Software Enthusiast
  CRUD perangkat
 
 ✅ CRUD perangkat 
+
 ✅ Kontrol LED & Fan  
 ✅ UI versi dark mode  
+
 ✅ Fuzzy logic untuk pengaturan suhu otomatis
 ✅ Notifikasi via Telegram 
 
