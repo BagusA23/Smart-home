@@ -74,8 +74,8 @@ python main.py
    - Pastikan koneksi WiFi & endpoint API sudah sesuai
   
 👨‍💻 Developer
-👤 Bagus Ardiansyah
-Mahasiswa Teknik Informatika | IoT & Software Enthusiast
+👤 Bagus Ardiansyah  
+Mahasiswa Teknik Informatika | IoT & Software Enthusiast  
 
 📫 GitHub
 
@@ -86,7 +86,7 @@ Mahasiswa Teknik Informatika | IoT & Software Enthusiast
 ✅ CRUD perangkat 
 ✅ Kontrol LED & Fan  
 ✅ UI versi dark mode  
-✅ Fuzzy logic untuk pengaturan suhu otomatis
+✅ Fuzzy logic untuk pengaturan suhu otomatis  
 ✅ Notifikasi via Telegram 
 
  📜 License
