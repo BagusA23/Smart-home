@@ -83,15 +83,11 @@ Mahasiswa Teknik Informatika | IoT & Software Enthusiast
 💡 Rencana Pengembangan
  CRUD perangkat
 
- Kontrol LED & Fan
-
- UI versi dark mode
-
- Fuzzy logic untuk pengaturan suhu otomatis
-
- Android app via Bluetooth
-
- Notifikasi via Telegram
+✅ Kontrol LED & Fan
+✅ UI versi dark mode
+✅ Fuzzy logic untuk pengaturan suhu otomatis
+✅ Android app via Bluetooth
+✅ Notifikasi via Telegram
 
  📜 License
 MIT License © 2025 Bagus Ardiansyah
