@@ -71,4 +71,16 @@ cd API
 go mod tidy  
 go run main.go  
 ```
+2. Jalankan Desktop App  
+```
+cd APP  
+pip install -r requirements.txt  
+python main.py  
+```
+3. Upload Firmware ke ESP32  
+- Buka Esp32/ di Arduino IDE / PlatformIO  
+- Edit SSID, password, dan URL API  
+- Upload ke board ESP32  
+
+## 🧠 Fitur Tambahan (Future Plan)  
 
