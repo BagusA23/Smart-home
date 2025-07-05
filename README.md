@@ -64,7 +64,7 @@ SMART_HOME/
 ```
 
 
-##🛠️ Instalasi & Setup  
+## 🛠️ Instalasi & Setup  
 1. Jalankan Backend (API)
 ```
 cd API  
