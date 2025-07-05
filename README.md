@@ -44,3 +44,31 @@
 ```markdown
 📷 assets/screenshot-ui.png
 🧠 Tambahkan screenshot antarmuka dan wiring board di sini nanti!
+```
+
+## 🧩 Arsitektur Sistem  
+```
+ESP32 <--HTTP--> Backend API <--CRUD--> Desktop APP
+```
+ - ESP32 mengirim data sensor via HTTP  
+ - Backend API menyimpan & mengatur logika kontrol  
+ - APP mengontrol perangkat dan membaca status dari API
+
+## 📦 Struktur Folder
+```
+SMART_HOME/
+├── API/        → Backend Go (REST API)
+├── APP/        → UI Desktop Python
+├── Esp32/      → Source Code ESP32 (Arduino)
+└── README.md
+```
+
+
+##🛠️ Instalasi & Setup  
+1. Jalankan Backend (API)
+```
+cd API  
+go mod tidy  
+go run main.go  
+```
+
