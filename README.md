@@ -83,7 +83,7 @@ Mahasiswa Teknik Informatika | IoT & Software Enthusiast
 💡 Rencana Pengembangan
  CRUD perangkat
 
-✅ CRUD perangkat 
+✅ CRUD perangkat   
 ✅ Kontrol LED & Fan  
 ✅ UI versi dark mode  
 ✅ Fuzzy logic untuk pengaturan suhu otomatis  
