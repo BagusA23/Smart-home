@@ -33,7 +33,7 @@
 - 📡 Monitoring suhu & kelembapan **real-time**
 - 💡 Kontrol perangkat rumah: **lampu, kipas, dll**
 - 🔐 Sistem **autentikasi login/register**
-- ⚙️ Otomatisasi suhu dengan **logika fuzzy** *(sedang dikembangkan)*
+- ⚙️ Otomatisasi suhu dengan **logika fuzzy** 
 - 🗂️ CRUD data perangkat
 - 🌙 UI versi **dark mode**
 
@@ -83,4 +83,19 @@ python main.py
 - Upload ke board ESP32  
 
 ## 🧠 Fitur Tambahan (Future Plan)  
+✅ Kontrol manual perangkat  
+✅ UI versi Dark/Light Mode  
+✅ Autentikasi user (login/register)  
+✅ Fuzzy logic otomatisasi suhu  
+✅ Notifikasi Telegram saat event (overheat, gas, dll)  
 
+## 👨‍💻 Tentang Developer  
+Bagus Ardiansyah  
+💻 Mahasiswa Teknik Informatika  
+📍 Fokus: IoT • Backend • Desktop Apps  
+📫 GitHub @BagusA23  
+
+📄 Lisensi  
+MIT License © 2025 Bagus Ardiansyah  
+
+<p align="center"> <sub>Made with ❤️ using Go, Python, and ESP32</sub><br> <sub>Powered by kopi dan deadline ✨</sub> </p> 
