@@ -1,93 +1,46 @@
-# 🏠 SMART HOME PROJECT
+<p align="center">
+  <img src="https://github.com/BagusA23/Smart-home/raw/main/assets/logo.png" alt="Smart‑Home Logo" width="120" />
+</p>
 
-🚀 Proyek ini adalah sistem **Smart Home berbasis ESP32** yang terintegrasi dengan:
-- Backend API (Go + Gin)
-- Desktop UI (Python + Tkinter)
-- Kontrol Perangkat IoT (Lampu, Kipas, Sensor Suhu, dsb.)
+<h1 align="center">🏡 Smart‑Home</h1>
 
----
+<p align="center">
+  Sistem Smart Home berbasis <strong>ESP32 + Golang + Python</strong><br>
+  Automatisasi, kontrol suhu, lampu, dan kipas secara real‑time.
+</p>
 
-## 📦 Struktur Proyek
-
-```
-SMART_HOME/
-├── API/ # Backend Golang: REST API untuk kontrol perangkat & sensor
-├── APP/ # Aplikasi desktop (Python Tkinter) untuk kontrol user
-├── Esp32/ # Kode untuk microcontroller (ESP32 + Arduino)
-```
-
+<p align="center">
+  <img src="https://img.shields.io/badge/status-development-yellow" alt="status">
+  <img src="https://img.shields.io/badge/made%20with-Go%20%7C%20Python%20%7C%20ESP32-blue" alt="tech">
+  <img src="https://img.shields.io/github/license/BagusA23/Smart-home" alt="license">
+</p>
 
 ---
 
-## ⚙️ Teknologi yang Digunakan
+## 🔍 Ringkasan
 
-| Komponen     | Teknologi                         |
-|--------------|-----------------------------------|
-| Backend API  | Go (Gin Framework) + PostgreSQL   |
-| Frontend UI  | Python (CustomTkinter)            |
-| IoT Device   | ESP32 + Arduino Framework         |
-| Komunikasi   | HTTP REST API                     |
-
----
-
-## 🌐 Fitur Utama
-
-✅ Monitoring suhu & kelembapan secara real-time  
-✅ Kontrol lampu dan kipas dari aplikasi desktop  
-✅ Sistem otomatisasi suhu menggunakan fuzzy logic *(on development)*  
-✅ Modular per ruangan: kamar, dapur, ruang tamu  
-✅ Autentikasi user (login/register)  
+| Komponen     | Teknologi & Fungsi                          |
+|--------------|----------------------------------------------|
+| **API**      | Backend Golang (Gin) + PostgreSQL / SQLite   |
+| **APP**      | UI Desktop Python (Tkinter/CustomTkinter)    |
+| **ESP32**    | Firmware Arduino — sensor & aktuator         |
+| **Komunikasi** | HTTP REST API, JSON                         |
 
 ---
 
-## 📸 Preview Aplikasi
+## 🚀 Fitur Utama
 
-*(Coming Soon!)*  
-Tambahkan screenshot aplikasi desktop dan wiring ESP di sini.
-
----
-
-## 📡 Integrasi IoT
-
-- 📍ESP32 terhubung ke jaringan WiFi
-- 📍Data sensor dikirim via HTTP POST ke server
-- 📍Perintah dari aplikasi dikirim ke ESP melalui REST API
+- 📡 Monitoring suhu & kelembapan **real-time**
+- 💡 Kontrol perangkat rumah: **lampu, kipas, dll**
+- 🔐 Sistem **autentikasi login/register**
+- ⚙️ Otomatisasi suhu dengan **logika fuzzy** *(sedang dikembangkan)*
+- 🗂️ CRUD data perangkat
+- 🌙 UI versi **dark mode**
 
 ---
 
-## 🛠 Cara Jalankan
+## 📸 Tampilan (Coming Soon!)
 
-### 1. Backend (API)
-```
-cd API
-go run main.go
-```
-
-2. Frontend (Aplikasi Desktop)
-```
-cd APP
-python main.py
-```
-
-3. ESP32
-   - Upload kode dari folder Esp32 ke ESP32 via Arduino IDE
-   - Pastikan koneksi WiFi & endpoint API sudah sesuai
-  
-👨‍💻 Developer   
-👤 Bagus Ardiansyah  
-Mahasiswa Teknik Informatika | IoT & Software Enthusiast  
-
-📫 GitHub
-
-
-💡 Rencana Pengembangan
- CRUD perangkat
-
-✅ CRUD perangkat   
-✅ Kontrol LED & Fan  
-✅ UI versi dark mode  
-✅ Fuzzy logic untuk pengaturan suhu otomatis  
-✅ Notifikasi via Telegram 
-
- 📜 License
-MIT License © 2025 Bagus Ardiansyah
+```markdown
+📷 assets/screenshot-ui.png
+🧠 Tambahkan screenshot antarmuka dan wiring board di sini nanti!
