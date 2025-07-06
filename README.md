@@ -1,6 +1,7 @@
-<p align="center">
-  <img src="https://github.com/BagusA23/Smart-home/raw/main/assets/logo.png" alt="Smart‑Home Logo" width="120" />
-</p>
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/platane/platane/output/github-contribution-grid-snake-dark.svg" alt="Snake animation" />
+</div>
 
 <h1 align="center">🏡 Smart‑Home</h1>
 
